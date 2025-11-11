@@ -5,6 +5,7 @@ import {
   FormControl,
   FormDescription,
 } from "./Form"
+import { Input } from "../Input/Input"
 import figma from "@figma/code-connect"
 
 figma.connect(
@@ -25,12 +26,19 @@ figma.connect(
       // The slot for any input element (text field, select, etc.)
       slotField: figma.children("Slot"),
     },
-    example: (props) => (
-      <FormItem data-style={props.style} data-variant={props.variant}>
-        <FormLabel>Label</FormLabel>
-        <FormControl>{props.slotField}</FormControl>
-        <FormDescription>{props.description}</FormDescription>
-      </FormItem>
-    ),
+    example: (props) => {
+      // Ensure slotField is a single element or use Input as fallback
+      const fieldElement = React.Children.count(props.slotField) === 1
+        ? props.slotField
+        : <Input placeholder="Enter text" />
+
+      return (
+        <FormItem data-style={props.style} data-variant={props.variant}>
+          <FormLabel>Label</FormLabel>
+          <FormControl>{fieldElement}</FormControl>
+          <FormDescription>{props.description}</FormDescription>
+        </FormItem>
+      )
+    },
   },
 )
