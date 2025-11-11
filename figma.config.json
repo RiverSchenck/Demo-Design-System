@@ -1,0 +1,7 @@
+{
+  "codeConnect": {
+    "include": ["src/ui/**/*.{tsx,jsx}"],
+    "label": "React",
+    "interactiveSetupFigmaFileUrl": "https://www.figma.com/design/8AQj34ysfReEm8l3z7asLu/DevMode-Demo?node-id=24-157&t=ffRkC2oZzz4ISY8Z-0"
+  }
+}
