@@ -36,3 +36,6 @@ Thumbs.db
 # Misc
 coverage/
 EOF
+
+*storybook.log
+storybook-static
