@@ -1,29 +1,33 @@
 import type { Preview } from '@storybook/react-vite'
 import '../src/index.css'
-import { ThemeProvider, useTheme } from '../src/lib/theme-provider'
-import React, { useEffect } from 'react'
+import { ThemeProvider } from '../src/lib/theme-provider'
+import React from 'react'
 
-// Decorator that syncs Storybook toolbar theme with ThemeProvider
-const ThemeDecorator = (Story: React.ComponentType, context: any) => {
-  const theme = context.globals.theme || 'light'
+// Component wrapper that handles theme changes
+const ThemeWrapper = ({ children, theme }: { children: React.ReactNode; theme: 'light' | 'dark' }) => {
+  React.useEffect(() => {
+    // Apply theme directly to document
+    const root = document.documentElement
+    root.classList.remove('light', 'dark')
+    root.classList.add(theme)
+  }, [theme])
 
   return (
-    <ThemeProvider defaultTheme={theme as 'light' | 'dark'} storageKey="storybook-ui-theme">
-      <ThemeSync theme={theme} />
-      <Story />
+    <ThemeProvider defaultTheme={theme} storageKey="storybook-ui-theme">
+      {children}
     </ThemeProvider>
   )
 }
 
-// Component to sync theme changes from toolbar to ThemeProvider
-const ThemeSync = ({ theme }: { theme: string }) => {
-  const { setTheme } = useTheme()
+// Decorator that syncs Storybook toolbar theme with ThemeProvider
+const ThemeDecorator = (Story: React.ComponentType, context: any) => {
+  const theme = (context.globals.theme || 'light') as 'light' | 'dark'
 
-  useEffect(() => {
-    setTheme(theme as 'light' | 'dark')
-  }, [theme, setTheme])
-
-  return null
+  return (
+    <ThemeWrapper theme={theme}>
+      <Story />
+    </ThemeWrapper>
+  )
 }
 
 const preview: Preview = {
@@ -42,6 +46,7 @@ const preview: Preview = {
       test: 'todo'
     }
   },
+
   globalTypes: {
     theme: {
       description: 'Global theme for components',
