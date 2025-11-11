@@ -1,6 +1,6 @@
 import * as React from "react"
 import * as AvatarPrimitive from "@radix-ui/react-avatar"
-import {AvatarFallback as AvatarFallbackPrimitive} from "@radix-ui/react-avatar"
+import { User } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
@@ -12,6 +12,31 @@ export type AvatarProps = React.ComponentProps<typeof AvatarPrimitive.Root> & {
     type?: "image" | "initial" | "placeholder"
     src?: string
     initials?: string
+    name?: string // Used to generate initials if not provided
+  }
+
+  // Helper function to generate initials from name
+  function getInitials(name?: string, providedInitials?: string): string {
+    if (providedInitials) return providedInitials
+    if (!name) return ""
+
+    const parts = name.trim().split(/\s+/)
+    if (parts.length === 0) return ""
+    if (parts.length === 1) return parts[0][0]?.toUpperCase() || ""
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+  }
+
+  // Helper function to get icon size based on avatar size
+  function getIconSize(size: AvatarProps["size"]): number {
+    const sizeMap = {
+      xxs: 12,
+      xs: 14,
+      sm: 16,
+      md: 20,
+      lg: 24,
+      xl: 28,
+    }
+    return sizeMap[size || "md"]
   }
 
   function Avatar({
@@ -23,8 +48,12 @@ export type AvatarProps = React.ComponentProps<typeof AvatarPrimitive.Root> & {
     type = "image",
     src,
     initials,
+    name,
     ...props
   }: AvatarProps) {
+    const displayInitials = getInitials(name, initials)
+    const iconSize = getIconSize(size)
+
     return (
       <div className="relative inline-flex">
         <AvatarPrimitive.Root
@@ -34,7 +63,7 @@ export type AvatarProps = React.ComponentProps<typeof AvatarPrimitive.Root> & {
           data-notification={hasNotification}
           data-notification-position={notificationPosition}
           className={cn(
-            "flex shrink-0 overflow-hidden rounded-full bg-muted",
+            "flex shrink-0 overflow-hidden rounded-full bg-muted border border-foreground",
             {
               "rounded-md": shape === "square",
               "rounded-full": shape === "circle",
@@ -51,38 +80,48 @@ export type AvatarProps = React.ComponentProps<typeof AvatarPrimitive.Root> & {
           )}
           {...props}
         >
-        {type === "image" && (
-          src ? (
+        {type === "image" && src && (
+          <>
             <AvatarPrimitive.Image
               data-slot="avatar-image"
               src={src}
-              alt="Avatar"
+              alt={name || "Avatar"}
               className="aspect-square size-full object-cover"
             />
-          ) : (
-            <AvatarFallbackPrimitive
+            <AvatarPrimitive.Fallback
               data-slot="avatar-fallback"
-              className="flex size-full items-center justify-center text-sm font-medium"
+              className="flex size-full items-center justify-center text-sm font-medium bg-muted"
             >
-              {initials}
-            </AvatarFallbackPrimitive>
-          )
+              {displayInitials || <User size={iconSize} className="text-muted-foreground" />}
+            </AvatarPrimitive.Fallback>
+          </>
+        )}
+
+        {type === "image" && !src && (
+          <AvatarPrimitive.Fallback
+            data-slot="avatar-fallback"
+            className="flex size-full items-center justify-center text-sm font-medium bg-muted"
+          >
+            {displayInitials || <User size={iconSize} className="text-muted-foreground" />}
+          </AvatarPrimitive.Fallback>
         )}
 
       {type === "initial" && (
-        <AvatarFallbackPrimitive
+        <AvatarPrimitive.Fallback
           data-slot="avatar-fallback"
-          className="flex size-full items-center justify-center text-sm font-medium"
+          className="flex size-full items-center justify-center text-sm font-medium bg-muted"
         >
-          {initials}
-        </AvatarFallbackPrimitive>
+          {displayInitials || <User size={iconSize} className="text-muted-foreground" />}
+        </AvatarPrimitive.Fallback>
       )}
 
       {type === "placeholder" && (
-        <AvatarFallbackPrimitive
+        <AvatarPrimitive.Fallback
           data-slot="avatar-fallback"
           className="flex size-full items-center justify-center bg-muted"
-        />
+        >
+          <User size={iconSize} className="text-muted-foreground" />
+        </AvatarPrimitive.Fallback>
       )}
         </AvatarPrimitive.Root>
 

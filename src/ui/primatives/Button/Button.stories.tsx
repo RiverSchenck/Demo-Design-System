@@ -137,13 +137,8 @@ export const NewYorkStyle: Story = {
 }
 
 export const AsLink: Story = {
-  args: {
-    asChild: true,
-    variant: "link",
-    children: undefined,
-  },
-  render: ({ children: _children, ...args }) => (
-    <Button {...args}>
+  render: () => (
+    <Button asChild variant="link">
       <a href="#" className="inline-flex items-center gap-2">
         View documentation
         <ArrowRight className="size-4" />

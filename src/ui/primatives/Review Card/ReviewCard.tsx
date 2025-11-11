@@ -1,5 +1,5 @@
 import { Star } from "lucide-react"
-import { Avatar, AvatarImage } from '../Avatar/Avatar'
+import { Avatar } from '../Avatar/Avatar'
 import { cn } from "@/lib/utils"
 
 export type ReviewCardProps = {
@@ -56,23 +56,16 @@ export function ReviewCard({
 
      {/* Reviewer */}
     <div className="flex items-center gap-3">
-    <Avatar className="size-12" type="image" src={avatar}>
-        {avatar ? (
-        <AvatarImage src={avatar} alt={reviewer} />
-        ) : (
-        <Avatar initials={reviewer} type="initial">
-        {reviewer
-            .split(" ")
-            .map((n) => n[0])
-            .join("")
-            .toUpperCase()}
-        </Avatar>
-        )}
-    </Avatar>
-    <div className="text-left">
+      <Avatar
+        className="size-12"
+        type="image"
+        src={avatar}
+        name={reviewer}
+      />
+      <div className="text-left">
         <p className="text-sm text-muted-foreground">{reviewer}</p>
         <p className="text-xs text-muted-foreground">{date}</p>
-    </div>
+      </div>
     </div>
     </div>
   )
