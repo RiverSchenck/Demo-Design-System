@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "storybook": "storybook dev -p 6006 --initial-path=/story/welcome--overview",
+    "storybook": "storybook dev -p 6007 --initial-path=/story/welcome--overview",
     "build-storybook": "storybook build",
     "chromatic": "chromatic --project-token=chpt_f8019af1c8df1ff --exit-zero-on-changes"
   },

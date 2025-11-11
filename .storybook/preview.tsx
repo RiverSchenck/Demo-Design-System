@@ -19,9 +19,10 @@ const ThemeWrapper = ({ children, theme }: { children: React.ReactNode; theme: '
   )
 }
 
-// Decorator that syncs Storybook toolbar theme with ThemeProvider
+// Decorator that uses theme from story args
 const ThemeDecorator = (Story: React.ComponentType, context: any) => {
-  const theme = (context.globals.theme || 'light') as 'light' | 'dark'
+  // Get theme from story args or default to dark
+  const theme = (context.args?.theme || 'dark') as 'light' | 'dark'
 
   return (
     <ThemeWrapper theme={theme}>
@@ -34,36 +35,29 @@ const preview: Preview = {
   parameters: {
     controls: {
       matchers: {
-       color: /(background|color)$/i,
-       date: /Date$/i,
+         color: /(background|color)$/i,
+         date: /Date$/i,
       },
     },
-
-    a11y: {
-      // 'todo' - show a11y violations in the test UI only
-      // 'error' - fail CI on a11y violations
-      // 'off' - skip a11y checks entirely
-      test: 'todo'
-    }
+    a11y: { test: 'todo' },
   },
-
-  globalTypes: {
+  argTypes: {
     theme: {
-      description: 'Global theme for components',
-      defaultValue: 'light',
-      toolbar: {
-        title: 'Theme',
-        icon: 'circlehollow',
-        items: [
-          { value: 'light', icon: 'circlehollow', title: 'Light' },
-          { value: 'dark', icon: 'circle', title: 'Dark' },
-        ],
-        showName: true,
-        dynamicTitle: true,
+      control: { type: 'radio' },
+      options: ['light', 'dark'],
+      description: 'Theme variant',
+      table: {
+        category: 'Theme',
       },
+      // Make theme appear first in controls
+      order: 0,
     },
+  },
+  args: {
+    // Default theme for all stories
+    theme: 'dark',
   },
   decorators: [ThemeDecorator],
-};
+}
 
-export default preview;
+export default preview
